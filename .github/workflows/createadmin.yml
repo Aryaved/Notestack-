@@ -1,0 +1,31 @@
+name: Create Admin
+
+on:
+  push:
+
+jobs:
+  create-admin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Django migrations and create superuser
+        env:
+          DJANGO_SUPERUSER_USERNAME: arya
+          DJANGO_SUPERUSER_EMAIL: khetalearyu@gmail.com
+          DJANGO_SUPERUSER_PASSWORD: Arya@12345
+        run: |
+          python manage.py migrate
+          python manage.py createsuperuser --noinput || echo "Superuser already exists"
+          
